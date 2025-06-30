@@ -108,8 +108,8 @@ const Page = () => {
             <TableRow className="my-table">
               <TableHead className="w-[100px]">Name</TableHead>
               <TableHead>Date Joined</TableHead>
-              <TableHead>University ID No</TableHead>
-              <TableHead>University ID Card</TableHead>
+              <TableHead>ID No</TableHead>
+              <TableHead>ID Card</TableHead>
               <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
