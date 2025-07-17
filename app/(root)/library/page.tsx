@@ -3,21 +3,24 @@ import InfiniteScrollWrapper from "@/components/shared/InfiniteScrollWrapper";
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { desc, sql, ilike } from "drizzle-orm";
-// import { redirect } from "next/navigation";
 
 export interface IBook extends Book {
   total: number;
 }
 
 interface PageProps {
-  searchParams: { q?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 const Page = async ({ searchParams }: PageProps) => {
   const session = await auth();
   if (!session?.user?.id) return null;
+
   const limit = 12;
-  const search = searchParams?.q || "";
+
+  // Extract and sanitize search query
+  const searchRaw = searchParams.q;
+  const search = typeof searchRaw === "string" ? searchRaw : "";
 
   const allBooks = (await db
     .select({
@@ -34,20 +37,16 @@ const Page = async ({ searchParams }: PageProps) => {
       videoUrl: books.videoUrl,
       createdAt: books.createdAt,
       summary: books.summary,
-      total: sql<number>`COUNT (*) OVER()`,
+      total: sql<number>`COUNT(*) OVER()`,
     })
     .from(books)
-    .where(
-      search
-        ? ilike(books.title, `%${search}%`)
-        : undefined
-    )
+    .where(search ? ilike(books.title, `%${search}%`) : undefined)
     .limit(20)
     .orderBy(desc(books.createdAt))) as IBook[];
 
   return (
     <div>
-      {/* Search Bar Top Right */}
+      {/* Search Bar */}
       <form
         action="/library"
         method="get"
@@ -80,6 +79,8 @@ const Page = async ({ searchParams }: PageProps) => {
           </svg>
         </button>
       </form>
+
+      {/* Book List */}
       <InfiniteScrollWrapper
         totalBooks={allBooks[0]?.total || 0}
         initialBooks={allBooks}
