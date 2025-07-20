@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import React, { ReactNode } from "react";
 
-import Hero from "./hero";
+// import Hero from "./hero";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
@@ -32,11 +32,9 @@ const Layout = async ({ children }: { children: ReactNode }) => {
   });
   return (
     <main className="root-container">
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="mx-auto w-full overflow-hidden max-w-7xl">
         <Header session={session} />
-
-        <Hero />
-        <div className="mt-20 pb-20"> {children}</div>
+        <div className="mt-28 pb-20"> {children}</div>
       </div>
     </main>
   );

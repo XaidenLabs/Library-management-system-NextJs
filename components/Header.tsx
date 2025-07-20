@@ -16,7 +16,7 @@ const Header = ({ session }: { session: Session }) => {
   return (
     <header className="my-10 flex w-full justify-between gap-5">
       <Link href="/" className="flex items-center gap-5">
-        <Image src="/icons/logo.svg" alt="logo" width={40} height={40} />
+        <Image src="/images/logo.jpeg" alt="logo" width={80} height={80} />
         <p className="hidden font-bebas-neue text-3xl text-white md:block">
           Nass Library
         </p>

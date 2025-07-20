@@ -4,6 +4,7 @@ import BookOverview from "@/components/BookOverview";
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { desc } from "drizzle-orm";
+import Hero from "./hero";
 // import { db } from "@/database/drizzle";
 // import { users } from "@/database/schema";
 
@@ -21,6 +22,7 @@ const Home = async () => {
 
   return (
     <>
+      <Hero />
       <BookOverview {...latestBooks[0]} userId={session?.user?.id as string} />
       <BookList
         title="Latest Books"
