@@ -1,47 +1,92 @@
-import { auth } from "@/auth";
-import InfiniteScrollWrapper from "@/components/shared/InfiniteScrollWrapper";
-import { db } from "@/database/drizzle";
-import { books } from "@/database/schema";
-import { desc, sql } from "drizzle-orm";
-// import { db } from "@/database/drizzle";
-// import { users } from "@/database/schema";
+"use client";
 
-export interface IBook extends Book {
+import { useEffect, useState } from "react";
+import InfiniteScrollWrapper from "@/components/shared/InfiniteScrollWrapper";
+
+export interface IBook {
+  id: number;
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  coverUrl: string;
+  coverColor: string;
+  description: string;
+  totalCopies: number;
+  availableCopies: number;
+  videoUrl: string;
+  createdAt: string;
+  summary: string;
   total: number;
 }
-const Page = async () => {
-  const session = await auth();
-  if (!session?.user?.id) return null;
-  //   const page = Number((await searchParams)?.page) || 1;
-  const limit = 12;
 
-  const allBooks = (await db
-    .select({
-      id: books.id,
-      title: books.title,
-      author: books.author,
-      genre: books.genre,
-      rating: books.rating,
-      coverUrl: books.coverUrl,
-      coverColor: books.coverColor,
-      description: books.description,
-      totalCopies: books.totalCopies,
-      availableCopies: books.availableCopies,
-      videoUrl: books.videoUrl,
-      createdAt: books.createdAt,
-      summary: books.summary,
-      total: sql<number>`COUNT (*) OVER()`,
-    })
-    .from(books)
-    .limit(20)
-    .orderBy(desc(books.createdAt))) as IBook[];
+export default function BooksSearchClient() {
+  const [query, setQuery] = useState("");
+  const [books, setBooks] = useState<IBook[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchBooks = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/books?q=${encodeURIComponent(query)}`, {
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          console.error("Failed to fetch books");
+          return;
+        }
+
+        const data = await res.json();
+        setBooks(data.books || []);
+      } catch (err: any) {
+        if (err.name !== "AbortError") console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const timeout = setTimeout(fetchBooks, 300); // debounce
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort(); // cancel previous fetch if user keeps typing
+    };
+  }, [query]);
+
   return (
-    <InfiniteScrollWrapper
-      totalBooks={allBooks[0]?.total || 0}
-      initialBooks={allBooks}
-      limit={limit}
-    />
-  );
-};
+    <div className="p-4">
+      <div className="flex justify-center mb-6">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full max-w-3xl flex gap-2"
+        >
+          <input
+            type="text"
+            placeholder="Search books..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 border border-gray-300 rounded-full px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </form>
+      </div>
 
-export default Page;
+      {loading ? (
+        <div className="text-center text-gray-500">Loading...</div>
+      ) : (
+        <InfiniteScrollWrapper
+          totalBooks={books[0]?.total || 0}
+          initialBooks={books.map((book) => ({
+            ...book,
+            id: String(book.id),
+            createdAt: new Date(book.createdAt),
+          }))}
+          limit={12}
+        />
+      )}
+    </div>
+  );
+}

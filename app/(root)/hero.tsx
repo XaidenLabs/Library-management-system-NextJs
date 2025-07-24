@@ -73,18 +73,7 @@ const Hero = () => {
         </motion.p>
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <motion.a
-            href="/sign-in"
-            className="inline-block px-8 py-4 text-lg font-semibold text-white bg-blue-700 rounded-full hover:bg-blue-800 transition-colors duration-300 shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            Join the Library
-          </motion.a>
-          <motion.a
-            href="/search"
+            href="/library"
             className="inline-block px-8 py-4 text-lg font-semibold text-white bg-green-600 rounded-full hover:bg-green-700 transition-colors duration-300 shadow-lg"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

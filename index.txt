@@ -1,0 +1,71 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { fetchGoogleBooks } from "@/lib/googleBooks"; // only client-safe data
+import placeholder from "@/public/images/placeholder.jpg";
+
+export interface IBook {
+  id: string;
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  coverUrl: string;
+  coverColor: string;
+  description: string;
+  totalCopies: number;
+  availableCopies: number;
+  videoUrl: string;
+  createdAt: string;
+  summary: string;
+  total: number;
+  source?: "db" | "google";
+}
+
+const Page = () => {
+  const [booksData, setBooksData] = useState<IBook[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const googleBooks = await fetchGoogleBooks("fiction", 20);
+      setBooksData(googleBooks);
+      setLoading(false);
+    };
+    fetchBooks();
+  }, []);
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = "/images/placeholder.jpg";
+  };
+
+  if (loading) return <div className="p-6 text-center">Loading books...</div>;
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Books</h1>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {booksData.map((book) => (
+          <div
+            key={book.id}
+            className="bg-white shadow rounded-lg overflow-hidden hover:scale-[1.02] transition-transform"
+          >
+            <img
+              src={book.coverUrl}
+              alt={book.title}
+              className="w-full h-[240px] object-cover"
+              onError={handleImageError}
+            />
+            <div className="p-3">
+              <h3 className="text-lg font-semibold line-clamp-2">{book.title}</h3>
+              <p className="text-sm text-gray-600">{book.author}</p>
+              <p className="text-xs text-gray-500">{book.genre}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Page;
