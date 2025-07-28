@@ -23,14 +23,12 @@
 2. ⚙️ [Tech Stack](#tech-stack)
 3. 🔋 [Features](#features)
 4. 🤸 [Quick Start](#quick-start)
-5. 🎥 [Youtube](https://youtu.be/E4aeyqxKvVw)
-6. 🟢 [Live Page](https://book-house-next-js.vercel.app/)
+6. 🟢 [Live Page](https://https://library-management-system-next-js-gules.vercel.app/)
 
 ## <a name="introduction">🤖 Introduction</a>
 
 Built with Next.js, TypeScript, and Postgres, the University Library Management System is a production-grade platform featuring a public-facing app and an admin interface. It offers advanced functionalities like seamless book borrowing with reminders and receipts, robust user management, automated workflows, and a modern, optimized tech stack for real-world scalability.
 
-Clicke [here](https://youtu.be/c5TzKkSxGw4) to watch a short youtube video of my project
 
 
 ## <a name="tech-stack"> 💻 Tech Stack </a>
@@ -87,13 +85,6 @@ Make sure you have the following installed on your machine:
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/en)
 - [npm](https://www.npmjs.com/) (Node Package Manager)
-
-**Cloning the Repository**
-
-```bash
-git clone [https://github.com/Magar0/Library-management-system-NextJs.git]
-cd Library-management-system-NextJs
-```
 
 **Installation**
 
